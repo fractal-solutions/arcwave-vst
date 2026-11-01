@@ -40,6 +40,24 @@ void writeWav16 (const juce::File& file, const juce::AudioBuffer<float>& buf, do
         }
 }
 
+juce::File findRepoRoot()
+{
+    auto dir = juce::File::getSpecialLocation (juce::File::currentExecutableFile).getParentDirectory();
+
+    for (int i = 0; i < 8; ++i)
+    {
+        if (dir.getChildFile ("CMakeLists.txt").existsAsFile() && dir.getChildFile ("src").isDirectory())
+            return dir;
+
+        auto parent = dir.getParentDirectory();
+        if (parent == dir)
+            break;
+        dir = parent;
+    }
+
+    return juce::File::getCurrentWorkingDirectory();
+}
+
 float renderNote (ArcWaveProcessor& proc, double seconds, int note, juce::AudioBuffer<float>* outBuf)
 {
     const int total = (int) (48000.0 * seconds);
@@ -83,9 +101,7 @@ int main()
 {
     juce::ScopedJuceInitialiser_GUI init;
 
-    const auto exe = juce::File::getSpecialLocation (juce::File::currentExecutableFile);
-    const auto root = exe.getParentDirectory().getParentDirectory()
-                         .getParentDirectory().getParentDirectory();
+    const auto root = findRepoRoot();
     const auto outDir = root.getChildFile ("out");
     outDir.createDirectory();
 
@@ -139,6 +155,7 @@ int main()
         std::cout << "Wrote original wavetable pack: " << originals.size() << " tables\n";
     }
 
+#if JUCE_WINDOWS
     // Render the editor to PNG so the UI can be inspected without a host.
     {
         ArcWaveEditor editor (proc);
@@ -163,6 +180,7 @@ int main()
             }
         }
     }
+#endif
 
     std::cout << "failures=" << failures << "\n";
     return failures == 0 ? 0 : 2;

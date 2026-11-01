@@ -6,12 +6,28 @@
 
 namespace
 {
+#if JUCE_MAC
+juce::String searchForGmsWaves (const juce::File& root)
+{
+    if (! root.isDirectory())
+        return {};
+
+    auto hits = root.findChildFiles (juce::File::findDirectories, true, "Synth Waves");
+    for (auto& hit : hits)
+        if (hit.getParentDirectory().getFileName().equalsIgnoreCase ("GMS"))
+            return hit.getFullPathName();
+
+    return {};
+}
+#endif
+
 juce::String defaultWaveDir()
 {
     auto env = juce::SystemStats::getEnvironmentVariable ("ARCWAVE_WAVETABLES", {});
     if (env.isNotEmpty())
         return env;
 
+#if JUCE_WINDOWS
     // Prefer the newest installed FL Studio's GMS wavetables when present.
     const juce::File imageLine ("C:\\Program Files\\Image-Line");
     if (imageLine.isDirectory())
@@ -33,6 +49,29 @@ juce::String defaultWaveDir()
     }
 
     return "C:\\Program Files\\Image-Line\\FL Studio 2025\\Plugins\\Fruity\\Generators\\GMS\\Synth Waves";
+#elif JUCE_MAC
+    const std::vector<juce::File> roots
+    {
+        juce::File ("/Applications"),
+        juce::File::getSpecialLocation (juce::File::userHomeDirectory).getChildFile ("Applications"),
+        juce::File::getSpecialLocation (juce::File::userHomeDirectory)
+            .getChildFile ("Documents").getChildFile ("Image-Line"),
+        juce::File ("/Library/Application Support/Image-Line"),
+        juce::File::getSpecialLocation (juce::File::userHomeDirectory)
+            .getChildFile ("Library").getChildFile ("Application Support").getChildFile ("Image-Line")
+    };
+
+    for (auto& root : roots)
+    {
+        auto found = searchForGmsWaves (root);
+        if (found.isNotEmpty())
+            return found;
+    }
+
+    return {};
+#else
+    return {};
+#endif
 }
 }
 

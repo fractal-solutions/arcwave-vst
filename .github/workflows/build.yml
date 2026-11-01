@@ -1,0 +1,117 @@
+name: Build
+
+on:
+  push:
+    branches: [ main ]
+    tags: [ 'v*' ]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch JUCE
+        shell: pwsh
+        run: |
+          if (-not (Test-Path "third_party/JUCE/CMakeLists.txt")) {
+            git clone --depth 1 --branch 9.0.4 https://github.com/juce-framework/JUCE.git third_party/JUCE
+          }
+
+      - name: Configure
+        run: cmake -S . -B build -G "Visual Studio 17 2022" -A x64 -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build VST3
+        run: cmake --build build --config Release --target ArcWave_VST3 --parallel
+
+      - name: Build and run tests
+        shell: pwsh
+        run: |
+          cmake --build build --config Release --target ArcWaveRenderTest --parallel
+          $test = Get-ChildItem -Path build -Recurse -Filter ArcWaveRenderTest.exe | Select-Object -First 1
+          if (-not $test) { throw "ArcWaveRenderTest.exe not found" }
+          & $test.FullName
+
+      - name: Package
+        shell: pwsh
+        run: |
+          $tag = "${{ github.ref_name }}"
+          $pkg = "ArcWave-$tag-win64"
+          New-Item -ItemType Directory -Force -Path $pkg | Out-Null
+          Copy-Item "build/ArcWave_artefacts/Release/VST3/ArcWave.vst3" "$pkg/ArcWave.vst3" -Recurse
+          Copy-Item "install-vst3.bat" $pkg
+          Copy-Item "LICENSE" $pkg
+          Copy-Item "packaging/README-windows.txt" "$pkg/README.txt"
+          Copy-Item "assets/wavetables-original" "$pkg/wavetables-original" -Recurse
+          Compress-Archive -Path "$pkg/*" -DestinationPath "ArcWave-$tag-win64.zip" -Force
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ArcWave-windows
+          path: ArcWave-*-win64.zip
+
+  macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch JUCE
+        run: |
+          if [ ! -f third_party/JUCE/CMakeLists.txt ]; then
+            git clone --depth 1 --branch 9.0.4 https://github.com/juce-framework/JUCE.git third_party/JUCE
+          fi
+
+      - name: Configure
+        run: |
+          cmake -S . -B build -G Xcode \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64" \
+            -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0
+
+      - name: Build VST3
+        run: cmake --build build --config Release --target ArcWave_VST3 --parallel
+
+      - name: Build and run tests
+        run: |
+          cmake --build build --config Release --target ArcWaveRenderTest --parallel
+          TEST_BIN="$(find build -name ArcWaveRenderTest -type f | head -n 1)"
+          if [ -z "$TEST_BIN" ]; then echo "ArcWaveRenderTest not found"; exit 1; fi
+          "$TEST_BIN"
+
+      - name: Package
+        run: |
+          TAG="${{ github.ref_name }}"
+          PKG="ArcWave-$TAG-macos"
+          mkdir -p "$PKG"
+          VST3="$(find build -type d -name ArcWave.vst3 | head -n 1)"
+          if [ -z "$VST3" ]; then echo "ArcWave.vst3 not found"; exit 1; fi
+          cp -R "$VST3" "$PKG/ArcWave.vst3"
+          cp install-macos.sh LICENSE "$PKG/"
+          cp packaging/README-macos.txt "$PKG/README.txt"
+          cp -R assets/wavetables-original "$PKG/"
+          ditto -c -k --sequesterRsrc --keepParent "$PKG" "ArcWave-$TAG-macos.zip"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ArcWave-macos
+          path: ArcWave-*-macos.zip
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: [ windows, macos ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: artifacts/*.zip
+          generate_release_notes: true

@@ -1,15 +1,13 @@
 # ArcWave by Qua$$a
 
-**Install (Windows, no Git needed):** download the latest `ArcWave-v0.3.0-win64.zip`
-from the [Releases page](../../releases/latest), extract it, and double-click
-**`install-vst3.bat`**. That copies `ArcWave.vst3` to
-`C:\Program Files\Common Files\VST3`. Prefer no admin prompt? Skip the script and
-add the extracted folder to FL Studio's VST3 search paths instead. Then open FL
-Studio and use **Options → Manage plugins → Find plugins** to rescan. ArcWave
-works standalone with its own wavetables; if FL Studio's GMS wavetables are
-installed, it uses those automatically.
+**Install (no Git needed):** open the [Releases page](../../releases/latest) and download the ZIP for your system.
 
-ArcWave is a free (AGPLv3) 64-bit Windows VST3 wavetable synthesizer: three
+- **Windows:** extract `ArcWave-v0.3.0-win64.zip`, run **`install-vst3.bat`** (copies to `C:\Program Files\Common Files\VST3`), or add the extracted folder to FL Studio's VST3 search paths.
+- **macOS:** extract `ArcWave-v0.3.0-macos.zip`, run **`./install-macos.sh`** (installs to `~/Library/Audio/Plug-Ins/VST3`), or copy `ArcWave.vst3` there yourself.
+
+Then open FL Studio and use **Options → Manage plugins → Find plugins** to rescan. ArcWave works standalone with its own wavetables; if FL Studio's GMS wavetables are installed, it uses those automatically.
+
+ArcWave is a free (AGPLv3) 64-bit VST3 wavetable synthesizer for Windows and macOS: three
 wavetable oscillators, unison, FM/Ring/AM cross-modulation, pitch envelope,
 multimode filter, envelopes, LFO, and an FX chain, wrapped in a compact custom
 UI with 68 categorized factory presets.
@@ -63,29 +61,42 @@ your local copy only.
 
 ## Requirements
 
-- Windows 10/11 x64
+- Windows 10/11 x64, or macOS 11+ (universal Apple Silicon/Intel)
 - A VST3 host (tested with FL Studio)
 - Optional: an FL Studio install with GMS for the GMS wavetables
 
+macOS builds produced by CI are unsigned. If Gatekeeper blocks the plugin,
+right-click it and choose Open, or run:
+
+```sh
+xattr -dr com.apple.quarantine ~/Library/Audio/Plug-Ins/VST3/ArcWave.vst3
+```
+
+Signing and notarization require an Apple Developer account.
+
 ## Install without Git
 
-1. Open the [Releases page](../../releases/latest) and download
-   `ArcWave-v0.3.0-win64.zip`.
+1. Open the [Releases page](../../releases/latest) and download the ZIP for your
+   system (`ArcWave-v0.3.0-win64.zip` or `ArcWave-v0.3.0-macos.zip`).
 2. Extract the ZIP anywhere.
-3. Run `install-vst3.bat` (asks for admin), **or** add the extracted folder to
-   your host's VST3 search paths (no admin needed).
+3. **Windows:** run `install-vst3.bat` (asks for admin), or add the extracted
+   folder to your host's VST3 search paths. **macOS:** run `./install-macos.sh`,
+   or copy `ArcWave.vst3` to `~/Library/Audio/Plug-Ins/VST3`.
 4. In FL Studio: **Options → Manage plugins → Find plugins**.
 
 ## Install from the repo
 
-The built plugin is committed at `dist/ArcWave.vst3`. Clone the repo and either
-run `install-vst3.bat` from the repo root, or copy `dist\ArcWave.vst3` to
-`C:\Program Files\Common Files\VST3\` manually. You can also add `dist` to your
-host's VST3 search paths.
+The Windows build is committed at `dist/ArcWave.vst3`. Clone the repo and either
+run `install-vst3.bat` (Windows) or `./install-macos.sh` (macOS) from the repo
+root, or copy `dist/ArcWave.vst3` to the platform's VST3 folder. You can also add
+`dist` to your host's VST3 search paths. macOS binaries are built by GitHub
+Actions; see below.
 
 ## Build from source
 
 Prerequisites: CMake ≥ 3.22, Visual Studio 2022 Build Tools (MSVC), and Git.
+
+**Windows**
 
 ```powershell
 git clone https://github.com/<owner>/arcwave.git
@@ -93,18 +104,30 @@ cd arcwave
 powershell -ExecutionPolicy Bypass -File scripts\build.ps1
 ```
 
-`scripts/build.ps1` fetches JUCE 9.0.4 into `third_party/JUCE/` if missing, builds
-the VST3, runs the headless render test, and stages the bundle in `dist/`.
+**macOS**
 
-Manual build:
+```sh
+git clone https://github.com/<owner>/arcwave.git
+cd arcwave
+./scripts/build-macos.sh
+```
 
-```powershell
+Both scripts fetch JUCE 9.0.4 into `third_party/JUCE/` if missing, build the VST3,
+run the headless render test, and stage the bundle in `dist/`. The macOS build is
+universal (`arm64;x86_64`) with a deployment target of macOS 11.0.
+
+Manual build (macOS):
+
+```sh
 git clone --depth 1 --branch 9.0.4 https://github.com/juce-framework/JUCE.git third_party/JUCE
-cmake -S . -B build -G "Visual Studio 17 2022" -A x64 -DCMAKE_BUILD_TYPE=Release
+cmake -S . -B build -G Xcode -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64" -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0
 cmake --build build --config Release --target ArcWave_VST3 --parallel
 ```
 
-JUCE is fetched at build time and is not committed to this repository.
+GitHub Actions (`.github/workflows/build.yml`) builds both platforms on every
+push and tag. Pushing a tag like `v0.3.0` also creates a GitHub Release with both
+ZIPs attached. JUCE is fetched at build time and is not committed to the repo.
 
 ## Reverse-engineering background
 
