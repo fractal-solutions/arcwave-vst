@@ -1,11 +1,12 @@
 # ArcWave by Qua$$a
 
-**Install (no Git needed):** open the [Releases page](../../releases/latest) and download the ZIP for your system.
+**Download (Windows, no Git needed):** [**ArcWave-v0.3.0-win64.zip**](downloads/ArcWave-v0.3.0-win64.zip)
 
-- **Windows:** extract `ArcWave-v0.3.0-win64.zip`, run **`install-vst3.bat`** (copies to `C:\Program Files\Common Files\VST3`), or add the extracted folder to FL Studio's VST3 search paths.
-- **macOS:** extract `ArcWave-v0.3.0-macos.zip`, run **`./install-macos.sh`** (installs to `~/Library/Audio/Plug-Ins/VST3`), or copy `ArcWave.vst3` there yourself.
+**Install (Windows):** extract the ZIP, run **`install-vst3.bat`** (copies to `C:\Program Files\Common Files\VST3`), or add the extracted folder to FL Studio's VST3 search paths. Then open FL Studio and use **Options → Manage plugins → Find plugins** to rescan.
 
-Then open FL Studio and use **Options → Manage plugins → Find plugins** to rescan. ArcWave works standalone with its own wavetables; if FL Studio's GMS wavetables are installed, it uses those automatically.
+**macOS:** the macOS binary is not published yet. On a Mac, run `./scripts/build-macos.sh` (see *Build from source*) and then `./install-macos.sh`. The macOS build is universal (Apple Silicon + Intel). The GitHub Actions workflow can also build it once the account billing lock is cleared; Releases/downloads themselves are free and never require payment.
+
+ArcWave works standalone with its own wavetables; if FL Studio's GMS wavetables are installed, it uses those automatically.
 
 ArcWave is a free (AGPLv3) 64-bit VST3 wavetable synthesizer for Windows and macOS: three
 wavetable oscillators, unison, FM/Ring/AM cross-modulation, pitch envelope,
@@ -76,12 +77,13 @@ Signing and notarization require an Apple Developer account.
 
 ## Install without Git
 
-1. Open the [Releases page](../../releases/latest) and download the ZIP for your
-   system (`ArcWave-v0.3.0-win64.zip` or `ArcWave-v0.3.0-macos.zip`).
+1. Download the [Windows ZIP](downloads/ArcWave-v0.3.0-win64.zip) (or a macOS ZIP
+   once one is published).
 2. Extract the ZIP anywhere.
 3. **Windows:** run `install-vst3.bat` (asks for admin), or add the extracted
-   folder to your host's VST3 search paths. **macOS:** run `./install-macos.sh`,
-   or copy `ArcWave.vst3` to `~/Library/Audio/Plug-Ins/VST3`.
+   folder to your host's VST3 search paths. **macOS:** build with
+   `./scripts/build-macos.sh` on a Mac, then run `./install-macos.sh` (or copy
+   `ArcWave.vst3` to `~/Library/Audio/Plug-Ins/VST3`).
 4. In FL Studio: **Options → Manage plugins → Find plugins**.
 
 ## Install from the repo
@@ -89,8 +91,8 @@ Signing and notarization require an Apple Developer account.
 The Windows build is committed at `dist/ArcWave.vst3`. Clone the repo and either
 run `install-vst3.bat` (Windows) or `./install-macos.sh` (macOS) from the repo
 root, or copy `dist/ArcWave.vst3` to the platform's VST3 folder. You can also add
-`dist` to your host's VST3 search paths. macOS binaries are built by GitHub
-Actions; see below.
+`dist` to your host's VST3 search paths. macOS binaries must be built on a Mac
+with `scripts/build-macos.sh` (or by the CI workflow when Actions is available).
 
 ## Build from source
 
