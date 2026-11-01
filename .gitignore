@@ -1,0 +1,21 @@
+# Build products
+build/
+out/
+release/
+
+# Third-party checkout (fetched by scripts/build.ps1)
+third_party/JUCE/
+
+# Extracted Image-Line wavetables (not redistributable)
+assets/wavetables/
+
+# Raw DLL-derived string dumps (keep the report instead)
+analysis/strings-*.txt
+
+# IDE / OS
+.vs/
+.vscode/
+*.user
+CMakeUserPresets.json
+Thumbs.db
+desktop.ini

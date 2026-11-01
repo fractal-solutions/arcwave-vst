@@ -1,0 +1,48 @@
+{
+  "Name": "ArcWave",
+  "Version": "0.3.0",
+  "Factory Info": {
+    "Vendor": "Qua$$a",
+    "URL": "",
+    "E-Mail": "",
+    "Flags": {
+      "Unicode": true,
+      "Classes Discardable": false,
+      "Component Non Discardable": false,
+    },
+  },
+  "Classes": [
+    {
+      "CID": "ABCDEF019182FAEB5173734141726377",
+      "Category": "Audio Module Class",
+      "Name": "ArcWave",
+      "Vendor": "Qua$$a",
+      "Version": "0.3.0",
+      "SDKVersion": "VST 3.8.0",
+      "Sub Categories": [
+        "Instrument",
+        "Synth",
+      ],
+      "Class Flags": 2,
+      "Cardinality": 2147483647,
+      "Snapshots": [
+      ],
+    },
+    {
+      "CID": "ABCDEF011234ABCD5173734141726377",
+      "Category": "Component Controller Class",
+      "Name": "ArcWave",
+      "Vendor": "Qua$$a",
+      "Version": "0.3.0",
+      "SDKVersion": "VST 3.8.0",
+      "Sub Categories": [
+        "Instrument",
+        "Synth",
+      ],
+      "Class Flags": 2,
+      "Cardinality": 2147483647,
+      "Snapshots": [
+      ],
+    },
+  ],
+}

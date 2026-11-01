@@ -1,0 +1,122 @@
+{
+  "schema_version": 1,
+  "target": {
+    "name": "GMS (Groove Machine Synth)",
+    "binary": "GMS_x64.dll",
+    "sha256": "a4ab525a1a425e396b69f82c83d1d491c1a8338c8de6a7bae8616f5ab33f2e1f",
+    "version": "1.1.0 Rev2594 (x64)"
+  },
+  "provenance": {
+    "method": "REA static PE inspection + ASCII strings + RTTI + .gmsynth presets",
+    "note": "Labels are observed from the binary. Ranges and ordering are NOT established without decompilation.",
+    "numeric_storage": "float32 little-endian inside .gmsynth; many values normalized to [0,1] (inferred)"
+  },
+  "kinds": ["bool", "enum", "float", "int", "wavetable"],
+  "groups": {
+    "synth": [
+      { "id": "mono_voice", "label": "SYNTH: Mono Voice", "kind": "bool" },
+      { "id": "octave", "label": "SYNTH: Octave", "kind": "int", "range": null },
+      { "id": "unison_voices", "label": "SYNTH: Unison Voices", "kind": "int", "range": null },
+      { "id": "unison_detune", "label": "SYNTH: Unison Detune", "kind": "float", "range": null },
+      { "id": "unison_stereo", "label": "SYNTH: Unison Stereo", "kind": "float", "range": null },
+      { "id": "unison_phase", "label": "SYNTH: Unison Phase", "kind": "float", "range": null },
+      { "id": "unison_phase_retrig", "label": "SYNTH: Unison Phase Retrig", "kind": "bool" },
+      { "id": "mix_osc2", "label": "SYNTH: Mix Oscllator 2", "kind": "float", "note": "label typo 'Oscllator' is present in the binary" },
+      { "id": "mix_osc3", "label": "SYNTH: Mix Oscillator 3", "kind": "float" },
+      { "id": "noise_mix", "label": "SYNTH: Noise Mix", "kind": "float" },
+      { "id": "mod_kind", "label": "SYNTH: Mod Kind", "kind": "enum", "options": null, "note": "cross-modulation type; AM/FM/RM/PM are candidates, not confirmed" },
+      { "id": "modulation", "label": "SYNTH: Modulation", "kind": "float" },
+      { "id": "wave1", "label": "Wave 1", "kind": "wavetable" },
+      { "id": "wave2", "label": "Wave 2", "kind": "wavetable" },
+      { "id": "wave3", "label": "Wave 3", "kind": "wavetable" }
+    ],
+    "oscillators": [
+      { "id": "osc1_pitch", "label": "SYNTH: Osc 1 Pitch", "kind": "int", "range": null },
+      { "id": "osc1_detune", "label": "SYNTH: Osc 1 Detune", "kind": "float", "range": null },
+      { "id": "osc2_pitch", "label": "SYNTH: Osc 2 Pitch", "kind": "int", "range": null },
+      { "id": "osc2_detune", "label": "SYNTH: Osc 2 Detune", "kind": "float", "range": null },
+      { "id": "osc2_invert", "label": "SYNTH: Osc 2 Invert", "kind": "bool" },
+      { "id": "phase_offset_osc2", "label": "SYNTH: Phase Offset Osc 2", "kind": "float", "range": null },
+      { "id": "phase_retrig_osc2", "label": "SYNTH: Phase Retrig Osc 2", "kind": "bool" },
+      { "id": "osc3_pitch", "label": "SYNTH: Osc 3 Pitch", "kind": "int", "range": null },
+      { "id": "osc3_detune", "label": "SYNTH: Osc 3 Detune", "kind": "float", "range": null }
+    ],
+    "filter": [
+      { "id": "filter_type", "label": "Filter Type", "kind": "enum", "options": ["Low Pass", "Hi Pass"], "note": "other options likely exist but were not observed in strings" },
+      { "id": "filter_type_switch", "label": "Filter Type Switch", "kind": "enum", "options": null },
+      { "id": "filter_cutoff", "label": "Filter Cutoff", "kind": "float", "range": null },
+      { "id": "filter_resonance", "label": "Filter Resonance", "kind": "float", "range": null },
+      { "id": "filter_kbd_tracking", "label": "Filter KBD Tracking", "kind": "float", "range": null },
+      { "id": "env_amount", "label": "Envelope Amount", "kind": "float", "range": null },
+      { "id": "env_invert", "label": "Envelope Invert", "kind": "bool" },
+      { "id": "env_attack", "label": "Envelope Attack", "kind": "float", "range": null },
+      { "id": "env_decay", "label": "Envelope Decay", "kind": "float", "range": null },
+      { "id": "env_destination", "label": "Envelope Destination", "kind": "enum", "options": null },
+      { "id": "env_destination_switch", "label": "Envelope Destination Switch", "kind": "enum", "options": null },
+      { "id": "env_number", "label": "Envelope Number", "kind": "int", "range": null }
+    ],
+    "envelopes": [
+      { "id": "env1_attack", "label": "EG1 Attack", "kind": "float", "range": null },
+      { "id": "env1_decay", "label": "EG1 Decay", "kind": "float", "range": null },
+      { "id": "env1_amount", "label": "EG1 Amount", "kind": "float", "range": null },
+      { "id": "env2_attack", "label": "EG2 Attack", "kind": "float", "range": null },
+      { "id": "env2_decay", "label": "EG2 Decay", "kind": "float", "range": null },
+      { "id": "env2_amount", "label": "EG2 Amount", "kind": "float", "range": null },
+      { "id": "amp_attack", "label": "AMP Attack", "kind": "float", "range": null },
+      { "id": "amp_decay", "label": "AMP Decay", "kind": "float", "range": null }
+    ],
+    "lfos": [
+      { "id": "lfo1_rate", "label": "LFO1 Rate", "kind": "float", "range": null },
+      { "id": "lfo1_amount", "label": "LFO1 Amount", "kind": "float", "range": null },
+      { "id": "lfo2_rate", "label": "LFO2 Rate", "kind": "float", "range": null },
+      { "id": "lfo2_amount", "label": "LFO2 Amount", "kind": "float", "range": null },
+      { "id": "lfo_rate", "label": "LFO Rate", "kind": "float", "range": null },
+      { "id": "lfo_amount", "label": "LFO Amount", "kind": "float", "range": null },
+      { "id": "lfo_shape", "label": "LFO Shape", "kind": "enum", "options": null },
+      { "id": "lfo_shape_switch", "label": "LFO Shape Switch", "kind": "enum", "options": null },
+      { "id": "lfo_sync", "label": "LFO Sync", "kind": "bool" },
+      { "id": "lfo_sync_switch", "label": "LFO Sync Switch", "kind": "bool" },
+      { "id": "lfo_retrig", "label": "LFO Retrig", "kind": "bool" },
+      { "id": "lfo_invert", "label": "LFO Invert", "kind": "bool" },
+      { "id": "lfo_destination", "label": "LFO Destination", "kind": "enum", "options": null },
+      { "id": "lfo_destination_switch", "label": "LFO Destination Switch", "kind": "enum", "options": null },
+      { "id": "lfo_number", "label": "LFO Number", "kind": "int", "range": null }
+    ],
+    "fx": {
+      "slot_count": 10,
+      "per_slot": [
+        { "id": "fx{n}_activate", "label": "FX Activate", "kind": "bool" },
+        { "id": "fx{n}_type", "label": "FX {n}", "kind": "enum", "options": ["Distortion", "Crusher", "Crush", "Flanger", "Phaser", "Reverb", "Panner", "Delay", "Filter", "Trancer"], "note": "values observed across the binary's effect labels" },
+        { "id": "fx{n}_param_x", "label": "FX Param X", "kind": "float", "range": null },
+        { "id": "fx{n}_param_y", "label": "FX Param Y", "kind": "float", "range": null }
+      ],
+      "global": [
+        { "id": "fx_glue", "label": "FX Glue", "kind": "float", "range": null },
+        { "id": "fx_lfo_rate", "label": "FX LFO Rate", "kind": "float", "range": null },
+        { "id": "fx_lfo_amount", "label": "FX LFO Amount", "kind": "float", "range": null },
+        { "id": "fx_lfo_shape", "label": "FX LFO Shape", "kind": "enum", "options": null },
+        { "id": "fx_lfo_sync", "label": "FX LFO Sync", "kind": "bool" },
+        { "id": "fx_lfo_shape_switch", "label": "FX LFO Shape Switch", "kind": "enum", "options": null },
+        { "id": "fx_lfo_sync_switch", "label": "FX LFO Sync Switch", "kind": "bool" }
+      ],
+      "effect_parameters": {
+        "common": ["Input", "Depth", "Time", "Frequency", "Cutoff", "Feedback", "Decay", "Release", "Bandwidth", "LowCut", "Predelay", "HighDamping", "Panning"],
+        "mute": ["MuteDry", "MuteInput", "MuteReverb", "MuteER"]
+      }
+    },
+    "channel": [
+      { "id": "chn_mix_level", "label": "CHN: Mix Level", "kind": "float", "range": null },
+      { "id": "chn_note_length", "label": "CHN: Note Length", "kind": "float", "range": null },
+      { "id": "chn_panning", "label": "CHN: Panning", "kind": "float", "range": null },
+      { "id": "chn_pitch", "label": "CHN: Pitch", "kind": "float", "range": null },
+      { "id": "chn_amp_attack", "label": "CHN: Amp Attack", "kind": "float", "range": null },
+      { "id": "chn_amp_decay", "label": "CHN: Amp Decay", "kind": "float", "range": null },
+      { "id": "chn_amp_sustain", "label": "CHN: Amp Sustain", "kind": "float", "range": null },
+      { "id": "chn_amp_release", "label": "CHN: Amp Release", "kind": "float", "range": null },
+      { "id": "chn_amp_level", "label": "CHN: Amp Level", "kind": "float", "range": null },
+      { "id": "chn_slide_enable", "label": "CHN: Slide Enable", "kind": "bool" },
+      { "id": "chn_slide_time", "label": "CHN: Slide Time", "kind": "float", "range": null },
+      { "id": "chn_shuffle_enable", "label": "CHN: Shuffle Enable", "kind": "bool" }
+    ]
+  }
+}
