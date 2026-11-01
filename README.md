@@ -99,7 +99,7 @@ Prerequisites: CMake ≥ 3.22, Visual Studio 2022 Build Tools (MSVC), and Git.
 **Windows**
 
 ```powershell
-git clone https://github.com/<owner>/arcwave.git
+git clone https://github.com/fractal-solutions/arcwave-vst.git
 cd arcwave
 powershell -ExecutionPolicy Bypass -File scripts\build.ps1
 ```
@@ -107,7 +107,7 @@ powershell -ExecutionPolicy Bypass -File scripts\build.ps1
 **macOS**
 
 ```sh
-git clone https://github.com/<owner>/arcwave.git
+git clone https://github.com/fractal-solutions/arcwave-vst.git
 cd arcwave
 ./scripts/build-macos.sh
 ```
