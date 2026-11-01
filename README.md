@@ -112,6 +112,8 @@ powershell -ExecutionPolicy Bypass -File scripts\build.ps1
 git clone https://github.com/fractal-solutions/arcwave-vst.git
 cd arcwave
 ./scripts/build-macos.sh
+# optional: build + package the release ZIP in one step
+./scripts/package-macos.sh
 ```
 
 Both scripts fetch JUCE 9.0.4 into `third_party/JUCE/` if missing, build the VST3,
